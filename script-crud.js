@@ -2,8 +2,13 @@ const btnAdicionarTarefa = document.querySelector('.app__button--add-task');
 const formAdicionarTarefa = document.querySelector('.app__form-add-task');
 const textArea = document.querySelector('.app__form-textarea');
 const ulTarefas = document.querySelector('.app__section-task-list');
-
+const btnCancelarAdicionarTarefa = document.querySelector('.app__form-footer__button--cancel');
+const btnDeletarAdicionarTarefa = document.querySelector('.app__form-footer__button--delete')
 const tarefas = JSON.parse(localStorage.getItem('tarefas')) || [];
+
+function atualizarTarefas(){
+    localStorage.setItem('tarefas', JSON.stringify(tarefas));
+}
 
 function criarElementoTarefa(tarefa){
     const li = document.createElement('li');
@@ -18,9 +23,19 @@ function criarElementoTarefa(tarefa){
 
     const paragrafo = document.createElement('p');
     paragrafo.textContent = tarefa.descricao;
-    paragrafo.classList.add('app__section-task-list-item-description')
+    paragrafo.classList.add('app__section-task-list-item-description');
     const botao = document.createElement('button');
     botao.classList.add('app_button-edit');
+
+    botao.onclick = () => {
+        const novaDescricao = prompt("Qual é o novo nome da tarefa?");
+        if (novaDescricao){
+            paragrafo.textContent = novaDescricao;
+            tarefa.descricao = novaDescricao;
+            atualizarTarefas();
+        }
+    };
+
     const imagemBotao = document.createElement('img');
     imagemBotao.setAttribute('src', './imagens/edit.png');
     botao.append(imagemBotao);
@@ -32,8 +47,18 @@ function criarElementoTarefa(tarefa){
     return li;
 }
 
+const limparFormulario = () => {
+    textArea.value = ''
+    formAdicionarTarefa.classList.add('hidden');
+}
+
 btnAdicionarTarefa.addEventListener('click', () => {
     formAdicionarTarefa.classList.toggle('hidden');
+    btnCancelarAdicionarTarefa.addEventListener('click', limparFormulario);
+    btnDeletarAdicionarTarefa.addEventListener('click', ()=>{
+        textArea.value = ''
+        return
+    });
 })
 
 formAdicionarTarefa.addEventListener('submit', (evento) => {
@@ -41,14 +66,16 @@ formAdicionarTarefa.addEventListener('submit', (evento) => {
     const tarefa = {
         descricao: textArea.value
     }
-    formAdicionarTarefa.classList.add('hidden')
     tarefas.push(tarefa);
     const elementoTarefa = criarElementoTarefa(tarefa);
     ulTarefas.append(elementoTarefa)
-    localStorage.setItem('tarefas', JSON.stringify(tarefas));
+    atualizarTarefas()
+    limparFormulario
 });
 
 tarefas.forEach(tarefa => {
     const elementoTarefa = criarElementoTarefa(tarefa);
     ulTarefas.append(elementoTarefa);
 });
+
+
