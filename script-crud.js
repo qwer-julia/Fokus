@@ -30,6 +30,7 @@ function criarElementoTarefa(tarefa){
     const paragrafo = document.createElement('p');
     paragrafo.textContent = tarefa.descricao;
     paragrafo.classList.add('app__section-task-list-item-description');
+    
     const botao = document.createElement('button');
     botao.classList.add('app_button-edit');
 
@@ -52,7 +53,7 @@ function criarElementoTarefa(tarefa){
 
     if (tarefa.completa) {
         li.classList.add('app__section-task-list-item-complete');
-        botao.setAttribute('disabled', 'disabled')
+        botao.remove();
     }else{
         li.onclick = () => {
             document.querySelectorAll('.app__section-task-list-item-active').forEach(elemento=>{
@@ -108,7 +109,7 @@ document.addEventListener('FocoFinalizado', () => {
     if (tarefaSelecionada && liTarefaSelecionada) {
         liTarefaSelecionada.classList.remove('app__section-task-list-item-active');
         liTarefaSelecionada.classList.add('app__section-task-list-item-complete');
-        liTarefaSelecionada.querySelector('button').setAttribute('disabled', 'disabled')
+        liTarefaSelecionada.querySelector('button').remove();
         tarefaSelecionada.completa = true;
         atualizarTarefas();
     }
